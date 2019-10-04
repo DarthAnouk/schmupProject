@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        InvokeRepeating("CheckOffscreen", 0f, 2f);
     }
 
     // Update is called once per frame
@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void Move()
     {
-        Vector3 tempPos = Vector3.positiveInfinity;
+        Vector3 tempPos = pos;
         tempPos.y -= speed * Time.deltaTime;
         pos = tempPos;
     }
@@ -39,5 +39,31 @@ public class Enemy : MonoBehaviour
     {
         get { return (this.transform.position); }
         set { this.transform.position = value; }
+    }
+
+    void CheckOffscreen()
+    {
+        // if bouns are still their default value...
+        if (bounds.size == Vector3.zero)
+        {
+            // then set them
+            bounds = Utils.CombineBoundsOfChildren(this.gameObject);
+            // also find the diff between bounds.center & transform.position
+            boundsCenterOffset = bounds.center - transform.position;
+        }
+        
+        // every time, update the bounds to the current position
+        bounds.center = transform.position + boundsCenterOffset;
+        //check to see whether the bounds are completely offscreen
+        Vector3 off = Utils.ScreenBoundsCheck(bounds, BoundsTest.offScreen);
+        if (off != Vector3.zero)
+        {
+            // if this enemy has gone off the bottom edge of the screen
+            if (off.y < 0)
+            {
+                // then destroy it
+                Destroy(this.gameObject);
+            }
+        }
     }
 }

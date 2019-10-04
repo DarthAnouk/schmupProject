@@ -12,6 +12,7 @@
         <e p="_Scripts" t="Include">
           <e p="Enemy.cs" t="Include" />
           <e p="Hero.cs" t="Include" />
+          <e p="Main.cs" t="Include" />
           <e p="Shield.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
         </e>

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+// this is outside of the Utils class
 public enum BoundsTest
 {
-    center,
-    onScreen,
-    offScreen
+    center, // is the center of the GameObject on screen?
+    onScreen, // are the bounds entirely on screen?
+    offScreen // are the bounds entirely off screen?
 }
 public class Utils : MonoBehaviour
 {
@@ -63,12 +64,15 @@ public class Utils : MonoBehaviour
         return (b);
     }
 
+    // make a static read-only public property camBounds
     static public Bounds camBounds
     {
         get
         {
+            //if _camBounds hasn't been set yet
             if (_camBounds.size == Vector3.zero)
             {
+                // SetCameraBounds using the default Camera
                 SetCameraBounds();
             }
 
@@ -76,24 +80,36 @@ public class Utils : MonoBehaviour
         }
     }
 
+    // this is the private static fiel that camBounds uses
     static private Bounds _camBounds;
 
+    // this function is used by camBounds to set _camBounds and can also be called directly
     public static void SetCameraBounds(Camera cam = null)
     {
+        // if no Camera, was passed in use the main Camera
         if (cam == null) cam = Camera.main;
         
+        // this makes a couple of important assumptions about the camera: 
+        //    1. the camera is orthographic
+        //    2. the camera is at a rotation of R[0,0,0]
+        
+        // make Vector3s at the topLeft and bottomRight of the Screen coords
         Vector3 topLeft = new Vector3(0,0,0);
         Vector3 bottomRight = new Vector3(Screen.width, Screen.height,0);
 
+        // convert these to world coordinates
         Vector3 boundTLN = cam.ScreenToWorldPoint(topLeft);
         Vector3 boundBRF = cam.ScreenToWorldPoint(bottomRight);
 
+        // adjust their zs to be at the near and far Camerica clipping planes
         boundTLN.z += cam.nearClipPlane;
         boundBRF.z += cam.farClipPlane;
-
+        
+        // find the center of the Bounds
         Vector3 center = (boundTLN + boundBRF) / 2f;
         _camBounds = new Bounds(center, Vector3.zero);
         
+        // expand _camBounds to encapsulate the extents
         _camBounds.Encapsulate(boundTLN);
         _camBounds.Encapsulate(boundBRF);
     }

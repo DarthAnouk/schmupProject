@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,7 +20,7 @@ public class Hero : MonoBehaviour
    public Bounds bounds;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         S = this;    //set the Singletom
         bounds = Utils.CombineBoundsOfChildren(this.gameObject);
@@ -50,5 +51,10 @@ public class Hero : MonoBehaviour
         
         // rotate the ship to make it feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        print("Triggered: " + other.gameObject.name);
     }
 }
