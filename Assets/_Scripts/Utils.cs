@@ -12,6 +12,9 @@ public enum BoundsTest
 }
 public class Utils : MonoBehaviour
 {
+
+    // ====== BOUNDS FUNCTIONS ====== \\
+
     // creates bounds that encapsulates the two Bounds passed in
     public static Bounds BoundsUnion(Bounds b0, Bounds b1)
     {
@@ -245,6 +248,33 @@ public class Utils : MonoBehaviour
         }
 
         return (Vector3.zero);
+    }
+    
+    // ====== TRANSFORM FUNCTIONS ======\\
+    
+    // this function will interatively climb up the transform.parent tree until it either finds a parent with a tag != "untagged" or no parent
+    public static GameObject FindTaggedParent(GameObject go)
+    {
+        // if this gameObject has a tag
+        if (go.tag != "Untagged")
+        {
+            // then return this gameObject
+            return (go);
+        }
+        // if there is no parent of this transform
+        if (go.transform.parent == null)
+        {
+            //we've reached the top of the heirarchy with no interesting tag so return null
+            return (null);
+        }
+        // otherwise, recursively climb up the tree
+        return (FindTaggedParent(go.transform.parent.gameObject));
+    }
+    
+    // this version of the function handles things if a transform is passed in
+    public static GameObject FindTaggedParent(Transform t)
+    {
+        return(FindTaggedParent(t.gameObject));
     }
 
     // Start is called before the first frame update

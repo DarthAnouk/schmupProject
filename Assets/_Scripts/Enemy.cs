@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -66,4 +68,34 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+
+    private void OnCollisionEnter(Collision coll)
+    {
+        GameObject other = coll.gameObject;
+        switch (other.tag)
+        {
+            case "ProjectileHero":
+                Projectile p = other.GetComponent<Projectile>();
+                // enemies don't take damage unless their on screen
+                // this stops the player from shooting them before they're visible
+                bounds.center = transform.position + boundsCenterOffset;
+                if (bounds.extents == Vector3.zero ||
+                    Utils.ScreenBoundsCheck(bounds, BoundsTest.offScreen) != Vector3.zero)
+                {
+                    Destroy(other);
+                    break;
+                }
+                // hurt this enemy
+                // get the damage amount from the Projectile.type & Main.W_DEFS
+                health -= Main.W_DEFS[p.type].damageOnHit;
+                if (health <= 0)
+                {
+                    // destroy this enemy
+                    Destroy(this.gameObject);
+                }
+                Destroy(other);
+                break;
+        }
+    }
+
 }

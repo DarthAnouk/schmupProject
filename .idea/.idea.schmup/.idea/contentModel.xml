@@ -13,8 +13,10 @@
           <e p="Enemy.cs" t="Include" />
           <e p="Hero.cs" t="Include" />
           <e p="Main.cs" t="Include" />
+          <e p="Projectile.cs" t="Include" />
           <e p="Shield.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
+          <e p="Weapon.cs" t="Include" />
         </e>
         <e p="NewBehaviourScript.cs" t="Include" />
       </e>
