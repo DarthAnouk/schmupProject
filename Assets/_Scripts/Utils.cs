@@ -13,6 +13,9 @@ public enum BoundsTest
 public class Utils : MonoBehaviour
 {
 
+    
+    
+    
     // ====== BOUNDS FUNCTIONS ====== \\
 
     // creates bounds that encapsulates the two Bounds passed in
@@ -250,6 +253,10 @@ public class Utils : MonoBehaviour
         return (Vector3.zero);
     }
     
+    
+    
+    
+    
     // ====== TRANSFORM FUNCTIONS ======\\
     
     // this function will interatively climb up the transform.parent tree until it either finds a parent with a tag != "untagged" or no parent
@@ -275,6 +282,28 @@ public class Utils : MonoBehaviour
     public static GameObject FindTaggedParent(Transform t)
     {
         return(FindTaggedParent(t.gameObject));
+    }
+    
+    
+    
+    
+    
+    
+    // ====== Materials Functions ====== \\
+    static public Material[] GetAllMaterials(GameObject go)
+    {
+        List<Material> mats = new List<Material>();
+        if (go.GetComponent<Renderer>() != null)
+        {
+            mats.Add(go.GetComponent<Renderer>().material);
+        }
+
+        foreach (Transform t in go.transform)
+        {
+            mats.AddRange(GetAllMaterials(t.gameObject));
+        }
+
+        return (mats.ToArray());
     }
 
     // Start is called before the first frame update

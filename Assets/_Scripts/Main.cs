@@ -11,7 +11,8 @@ public class Main : MonoBehaviour
 
     public GameObject[] prefabEnemies;
     public float enemySpawnPerSecond = 0.5f; // # Enemies/second
-    public float eneySpawnPadding = 1.5f; // padding for position
+    public float enemySpawnPadding = 1.5f; // padding for position
+    
     public WeaponDefinition[] weaponDefinitions;
 
     public bool _______;
@@ -19,7 +20,6 @@ public class Main : MonoBehaviour
     public WeaponType[] activeWeaponTypes;
     public float enemySpawnRate; // delay between Enemy spawns
     
-    // Start is called before the first frame update
     void Awake()
     {
         S = this;
@@ -69,10 +69,13 @@ public class Main : MonoBehaviour
         // pick a random enemy prefab to instatiate
         int ndx = Random.Range(0, prefabEnemies.Length);
         GameObject go = Instantiate(prefabEnemies[ndx]) as GameObject;
+       
         // position the enemy above the screen with a random x position
         Vector3 pos = Vector3.zero;
-        float xMin = Utils.camBounds.min.x + eneySpawnPadding;
-        float xMax = Utils.camBounds.max.x + eneySpawnPadding;
+        float xMin = Utils.camBounds.min.x + enemySpawnPadding;
+        float xMax = Utils.camBounds.max.x + enemySpawnPadding;
+        pos.x = Random.Range(xMin, xMax);
+        pos.y = Utils.camBounds.max.y + enemySpawnPadding;
         go.transform.position = pos;
         //call spawnenemy() again in a couple of seconds
         Invoke("SpawnEnemy", enemySpawnRate);

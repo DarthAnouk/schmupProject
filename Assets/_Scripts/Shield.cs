@@ -7,11 +7,13 @@ public class Shield : MonoBehaviour
     public float rotationsPerSecond = 0.1f;
     public bool ________________;
     public int levelShown = 0;
+
+    private Material mat;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        mat = GetComponent<Renderer>().material;
     }
 
     // Update is called once per frame
@@ -24,9 +26,8 @@ public class Shield : MonoBehaviour
         if (levelShown != currLevel)
         {
             levelShown = currLevel;
-            Material mat = this.GetComponent<Renderer>().material;
             // adjust the texture offset to show different shield level
-            mat.mainTextureOffset = new Vector2(02f * levelShown, 0);
+            mat.mainTextureOffset = new Vector2(0.2f * levelShown, 0);
         }
 
         // rotate the shield a bit every second

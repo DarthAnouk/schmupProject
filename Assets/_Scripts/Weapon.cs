@@ -31,6 +31,7 @@ public class WeaponDefinition
     public Color projectileColor = Color.white;
     public float damageOnHit = 0; // amount of damage caused
     public float continuousDamage = 0; // damage per second (laser)
+    public float delayBetweenShots = 0;
     public float velocity = 20; // speed of projectiles
 }
 
