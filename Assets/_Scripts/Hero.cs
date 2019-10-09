@@ -23,9 +23,12 @@ public class Hero : MonoBehaviour
    
    // declare a new delegate type WeaponFireDelegate
    public delegate void WeaponFireDelegate();
+   
    // create a WeaponFireDelegate field named fireDelegate
    public WeaponFireDelegate fireDelegate;
     
+   
+   
     // Start is called before the first frame update
     void Awake()
     {
@@ -33,6 +36,8 @@ public class Hero : MonoBehaviour
         bounds = Utils.CombineBoundsOfChildren(this.gameObject);
     }
 
+    
+    
     // Update is called once per frame
     void Update()
     {
@@ -66,6 +71,8 @@ public class Hero : MonoBehaviour
             fireDelegate();
         }
     }
+    
+    
     
     // this variable holds a reference to the last triggering GameObject
     public GameObject lastTriggerGo = null;
@@ -103,6 +110,8 @@ public class Hero : MonoBehaviour
         }
     }
 
+    
+    
     public float shieldLevel
     {
         get { return (_shieldLevel); }

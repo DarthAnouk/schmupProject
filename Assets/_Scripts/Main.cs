@@ -90,6 +90,6 @@ public class Main : MonoBehaviour
     public void Restart()
     {
         // reload _Scene_0 to restart the game
-        Application.LoadLevel("_Scene_0");
+        Application.LoadLevel("SampleScene");
     }
 }
