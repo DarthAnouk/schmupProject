@@ -46,7 +46,7 @@ public class Main : MonoBehaviour
             return (W_DEFS[wt]);
         }
         // this will return a definition for WeaponType.none which means it has failed to find the WeaponDefintion
-        return (new WeaponDefinition());
+        return ( new WeaponDefinition() );
     }
 
     private void Start()

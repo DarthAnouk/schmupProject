@@ -94,7 +94,7 @@ public class Enemy : MonoBehaviour
         {
             case "ProjectileHero":
                 Projectile p = other.GetComponent<Projectile>();
-                // enemies don't take damage unless their on screen
+                // enemies don't take damage unless they're onscreen
                 // this stops the player from shooting them before they're visible
                 bounds.center = transform.position + boundsCenterOffset;
                 if (bounds.extents == Vector3.zero ||

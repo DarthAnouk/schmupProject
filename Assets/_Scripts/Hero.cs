@@ -68,6 +68,7 @@ public class Hero : MonoBehaviour
         // first, make sure the Axis("Jump") button is pressed, then ensure that fireDelegate isn't null to avoid an error
         if (Input.GetAxis("Jump") == 1 && fireDelegate != null)
         {
+            print("accessed jump function");
             fireDelegate();
         }
     }

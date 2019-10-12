@@ -290,6 +290,7 @@ public class Utils : MonoBehaviour
     
     
     // ====== Materials Functions ====== \\
+    // returns a list of all Materials on this GameObject or its children
     static public Material[] GetAllMaterials(GameObject go)
     {
         List<Material> mats = new List<Material>();
