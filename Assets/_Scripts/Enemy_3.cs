@@ -1,18 +1,65 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-public class Enemy_3 : MonoBehaviour
+public class Enemy_3 : Enemy
 {
+    // Enemy_3 will move following a Bezier curve, which is a linear interpolation between more than two points
+    public Vector3[] points;
+    public float birthTime;
+    public float lifeTime = 10;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
+        points = new Vector3[3];
+        
+        // starting position set by Main.SpawnEnemy()
+        points[0] = pos;
+
+        // set xMin and xMax the same way that Main.SpawnEnemy() does
+        float xMin = Utils.camBounds.min.x + Main.S.enemySpawnPadding;
+        float xMax = Utils.camBounds.max.x - Main.S.enemySpawnPadding;
+        
+        Vector3 v;
+        
+        // pick a random middle position in the bottom half of the screen
+        v = Vector3.zero;
+        v.x = Random.Range(xMin, xMax);
+        v.y = Random.Range(Utils.camBounds.min.y, 0);
+        points[1] = v;
+        
+        // pick random final position above the top of the screen
+        v = Vector3.zero;
+        v.y = pos.y;
+        v.x = Random.Range(xMin, xMax);
+        points[2] = v;
+        
+        // see the birthTime to the current time
+        birthTime = Time.time;
         
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Move ()
     {
+        // Bezier curves work based on a u value between 0 & 1
+        float u = (Time.time - birthTime) / lifeTime;
+
+        if (u > 1)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
         
+        //interpolate the three Bezier curve points
+        Vector3 p01, p12;
+        u = u - 0.2f * Mathf.Sin(u * Mathf.PI * 2);
+        p01 = (1 - u) * points[0] + u * points[1];
+        p12 = (1 - u) * points[1] + u * points[2];
+        pos = (1 - u) * p01 + u * u * p12;
     }
 }
