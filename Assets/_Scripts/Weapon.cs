@@ -11,6 +11,10 @@ public enum WeaponType
 {
     none,
     blaster,
+    redBlaster,
+    blueBlaster,
+    greenBlaster,
+    purpleBlaster,
     spread,
     shield
 }
@@ -18,7 +22,6 @@ public enum WeaponType
 
 // the WeaponDefinition class allows you to set the properties of a specific weapon in the Inspector
 // Main has an array of WeaponsDefinitions
-
 [System.Serializable] public class WeaponDefinition
 {
     public WeaponType type = WeaponType.none;
@@ -39,7 +42,8 @@ public class Weapon : MonoBehaviour
     static public Transform PROJECTILE_ANCHOR;
 
     public bool ________;
-    private WeaponType _type = WeaponType.blaster;
+    private WeaponType _type = WeaponType.purpleBlaster;
+    //private WeaponType _type;
     public  WeaponDefinition def;
     public GameObject collar;
     public float lastShot; // time last shot was fired
@@ -86,6 +90,7 @@ public class Weapon : MonoBehaviour
         def = Main.GetWeaponDefinition(_type);
         collar.GetComponent<Renderer>().material.color = def.color;
         lastShot = 0;
+        
     }
 
     public void Fire()
@@ -100,7 +105,9 @@ public class Weapon : MonoBehaviour
         {
             return;
         }
+
         Projectile p;
+        
         switch (type)
         {
             case WeaponType.blaster:
@@ -114,6 +121,26 @@ public class Weapon : MonoBehaviour
                 p.GetComponent<Rigidbody>().velocity = new Vector3(-0.2f, 0.9f,0) * def.velocity;
                 p = MakeProjectile();
                 p.GetComponent<Rigidbody>().velocity = new Vector3(0.2f, 0.9f, 0) * def.velocity;
+                break;
+            
+            case WeaponType.redBlaster:
+                p = MakeProjectile();
+                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
+                break;
+            case WeaponType.blueBlaster:
+                p = MakeProjectile();
+                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
+                p.GetComponent<Material>().color = Color.blue;
+                break;
+            case WeaponType.greenBlaster:
+                p = MakeProjectile();
+                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
+                p.GetComponent<Material>().color = Color.green;
+                break;
+            case WeaponType.purpleBlaster:
+                p = MakeProjectile();
+                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
+                p.GetComponent<Material>().color = Color.magenta;
                 break;
         }
     }

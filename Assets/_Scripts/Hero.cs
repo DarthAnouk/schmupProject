@@ -18,21 +18,23 @@ public class Hero : MonoBehaviour
     public float _shieldLevel = 1;
     public bool __________________;
 
-   // public bool;
    public Bounds bounds;
-   
+
    // declare a new delegate type WeaponFireDelegate
    public delegate void WeaponFireDelegate();
    
    // create a WeaponFireDelegate field named fireDelegate
    public WeaponFireDelegate fireDelegate;
+
+   public GameObject bullet1;
+    
     
    
    
     // Start is called before the first frame update
     void Awake()
     {
-        S = this;    //set the Singletom
+        S = this;    //set the Singleton
         bounds = Utils.CombineBoundsOfChildren(this.gameObject);
     }
 
@@ -50,7 +52,6 @@ public class Hero : MonoBehaviour
         pos.x += xAxis * speed * Time.deltaTime;
         pos.y += yAxis * speed * Time.deltaTime;
         transform.position = pos;
-
         bounds.center = transform.position;
         
         // keep the ship constrained to the screen bounds
@@ -64,13 +65,50 @@ public class Hero : MonoBehaviour
         // rotate the ship to make it feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
         
-        // use the fireDelegate to fire Weapons
-        // first, make sure the Axis("Jump") button is pressed, then ensure that fireDelegate isn't null to avoid an error
-        if (Input.GetAxis("Jump") == 1 && fireDelegate != null)
+        // A button is red firing, S is blue firing, D is green firing, F is purple firing
+        
+        /*
+        if (Input.GetKey(KeyCode.LeftShift) == true && fireDelegate != null)
         {
-            print("accessed jump function");
+            print("shift");
+            fireDelegate();
+        } 
+        else if (Input.GetKey(KeyCode.Z) == true && fireDelegate != null)
+        {
+            print("Z");
             fireDelegate();
         }
+        else if (Input.GetKey(KeyCode.X) == true && fireDelegate != null)
+        {
+            print("X");
+            fireDelegate();
+        }
+        */
+
+        if (Input.GetAxis("Jump") == 1 && fireDelegate != null)
+        {
+            fireDelegate();
+            
+        }
+        
+        
+        if (Input.GetKeyDown(KeyCode.LeftShift) == true && fireDelegate != null)
+        {
+            print("shift");
+           // Weapon.type = WeaponType.purpleBlaster;
+            fireDelegate();
+        } 
+        else if (Input.GetKey(KeyCode.Z))
+        {
+            print("Z");
+            fireDelegate();
+        }
+        else if (Input.GetKey(KeyCode.X))
+        {
+            print("X");
+            fireDelegate();
+        }
+
     }
     
     
@@ -94,10 +132,10 @@ public class Hero : MonoBehaviour
 
             if (go.tag == "Enemy")
             {
-                // if the shield was triggered by an enemy, Decrease the level of the shield by 1
-                shieldLevel--;
-                // destroy the enemy
-                Destroy(go);
+                
+                shieldLevel--;        // if the shield was triggered by an enemy, Decrease the level of the shield by 1
+                Destroy(go);          // destroy the enemy
+                
             }
             else
             {
@@ -119,11 +157,11 @@ public class Hero : MonoBehaviour
         set
         {
             _shieldLevel = Mathf.Min(value, 4);
-            //if the shield is going to be set to less than zero
+            
+            //restart the game
             if (value < 0)
             {
                 Destroy(this.gameObject);
-                // tell Main.S to restart the game after a delay
                 Main.S.DelayedRestart(gameRestartDelay);
             }
         }

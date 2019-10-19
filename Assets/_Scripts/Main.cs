@@ -20,6 +20,8 @@ public class Main : MonoBehaviour
     public WeaponType[] activeWeaponTypes;
     public float enemySpawnRate; // delay between Enemy spawns
     
+    public GameObject text = GameObject.Find("Score");
+
     void Awake()
     {
         S = this;

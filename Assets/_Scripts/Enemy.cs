@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
 {
     public float speed = 10f; // the speed in m/s
     public float fireRate = 0.3f; // seconds/shot (unsused)
-    public float health = 10;
+    public float health = 5;
     public int score = 100; // points earned for destroying this
 
     public int showDamageForFrames = 2; // # of frames to show damage
