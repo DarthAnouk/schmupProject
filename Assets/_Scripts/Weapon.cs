@@ -42,17 +42,20 @@ public class Weapon : MonoBehaviour
     static public Transform PROJECTILE_ANCHOR;
 
     public bool ________;
-    private WeaponType _type = WeaponType.purpleBlaster;
-    //private WeaponType _type;
+    // private WeaponType _type = WeaponType.blaster;    // default weapon type in case everything breaks
+    public WeaponType _type = WeaponType.blaster;
     public  WeaponDefinition def;
     public GameObject collar;
     public float lastShot; // time last shot was fired
 
-    private void Start()
+    private void Awake()
     {
         collar = transform.Find("Collar").gameObject;
-        // call SetType() properly for the default _type
-        SetType(_type);
+    }
+
+    private void Start()
+    {
+        SetType(_type);            // call SetType() properly for the default _type
 
         if (PROJECTILE_ANCHOR == null)
         {
@@ -65,6 +68,7 @@ public class Weapon : MonoBehaviour
         if (parentGO.tag == "Hero")
         {
             Hero.S.fireDelegate += Fire;
+           
         }
     }
 
@@ -110,10 +114,7 @@ public class Weapon : MonoBehaviour
         
         switch (type)
         {
-            case WeaponType.blaster:
-                p = MakeProjectile();
-                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
-                break;
+            /*
             case WeaponType.spread:
                 p = MakeProjectile();
                 p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
@@ -122,7 +123,12 @@ public class Weapon : MonoBehaviour
                 p = MakeProjectile();
                 p.GetComponent<Rigidbody>().velocity = new Vector3(0.2f, 0.9f, 0) * def.velocity;
                 break;
-            
+            */
+            case WeaponType.blaster:
+                p = MakeProjectile();
+                p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
+                p.GetComponent<Material>().color = Color.red;
+                break;
             case WeaponType.redBlaster:
                 p = MakeProjectile();
                 p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
@@ -142,6 +148,8 @@ public class Weapon : MonoBehaviour
                 p.GetComponent<Rigidbody>().velocity = Vector3.up * def.velocity;
                 p.GetComponent<Material>().color = Color.magenta;
                 break;
+            
+            
         }
     }
 
@@ -159,7 +167,7 @@ public class Weapon : MonoBehaviour
             go.layer = LayerMask.NameToLayer("ProjectileEnemy");
         }
 
-        go.transform.position = collar.transform.position;
+        //go.transform.position = collar.transform.position;
         go.transform.parent = PROJECTILE_ANCHOR;
         Projectile p = go.GetComponent<Projectile>();
         p.type = type;

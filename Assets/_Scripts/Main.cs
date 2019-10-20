@@ -20,19 +20,17 @@ public class Main : MonoBehaviour
     public WeaponType[] activeWeaponTypes;
     public float enemySpawnRate; // delay between Enemy spawns
     
-    public GameObject text = GameObject.Find("Score");
+    //public GameObject text = GameObject.Find("Score");
 
     void Awake()
     {
         S = this;
         // set Utils.camBounds
         Utils.SetCameraBounds(this.GetComponent<Camera>());
-        // 0.5 enemies/second - enemySpawnRate of 2
-        enemySpawnRate = 1f / enemySpawnPerSecond;
+        enemySpawnRate = 1f / enemySpawnPerSecond;    // 0.5 enemies/second - enemySpawnRate of 2
         Invoke("SpawnEnemy", enemySpawnRate);
         
-        // a generic Dictionary with WeaponType as the key
-        W_DEFS = new Dictionary<WeaponType, WeaponDefinition>();
+        W_DEFS = new Dictionary<WeaponType, WeaponDefinition>();    // a generic Dictionary with WeaponType as the key
         foreach (WeaponDefinition def in weaponDefinitions)
         {
             W_DEFS[def.type] = def;
@@ -47,23 +45,18 @@ public class Main : MonoBehaviour
         {
             return (W_DEFS[wt]);
         }
-        // this will return a definition for WeaponType.none which means it has failed to find the WeaponDefintion
+        // this will return a definition for WeaponType.none which means it has failed to find the WeaponDefinition
         return ( new WeaponDefinition() );
     }
 
     private void Start()
     {
+        // make a list of all of the active weapons
         activeWeaponTypes = new WeaponType[weaponDefinitions.Length];
         for (int i = 0; i < weaponDefinitions.Length; i++)
         {
             activeWeaponTypes[i] = weaponDefinitions[i].type;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public void SpawnEnemy()
@@ -79,6 +72,7 @@ public class Main : MonoBehaviour
         pos.x = Random.Range(xMin, xMax);
         pos.y = Utils.camBounds.max.y + enemySpawnPadding;
         go.transform.position = pos;
+        
         //call spawnenemy() again in a couple of seconds
         Invoke("SpawnEnemy", enemySpawnRate);
     }

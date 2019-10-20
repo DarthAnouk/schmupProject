@@ -9,40 +9,55 @@ public class Hero : MonoBehaviour
 
     public float gameRestartDelay = 2f;
 
+    
+    [Header("Set in Inspector")]
+    
     // these fields control the movement of the ship
     public float speed = 30;
     public float rollMult = -45;
     public float pitchMult = 30;
     
+    [Header("Set Dynamically")]
     // ship status information
-    public float _shieldLevel = 1;
+    private float shieldLevel = 1;
+    
+    // weapons fields
+    public Weapon[] weapons;
+    
     public bool __________________;
 
    public Bounds bounds;
 
-   // declare a new delegate type WeaponFireDelegate
-   public delegate void WeaponFireDelegate();
-   
-   // create a WeaponFireDelegate field named fireDelegate
-   public WeaponFireDelegate fireDelegate;
+   /* WEAPON DELEGATE SETUP */
+   public delegate void WeaponFireDelegate();    // declare a new delegate type WeaponFireDelegate
+   public WeaponFireDelegate fireDelegate;    // create a WeaponFireDelegate field named fireDelegate, calls on Fire() method in Weapon.cs
 
-   public GameObject bullet1;
-    
-    
    
-   
-    // Start is called before the first frame update
     void Awake()
     {
-        S = this;    //set the Singleton
+        if (S == null)
+        {
+            S = this;    //set the Singleton
+        }
+        else
+        {
+            Debug.LogError("Hero.Awake() - Attempted to assign second Hero.S");
+        }
         bounds = Utils.CombineBoundsOfChildren(this.gameObject);
     }
 
-    
-    
+    private void Start()
+    {
+        ClearWeapons();
+        weapons[0].SetType(WeaponType.blaster);
+    }
+
+
     // Update is called once per frame
     void Update()
     {
+        /* MOVEMENT CONTROL */
+        
         // pull in information from the Input class
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
@@ -54,51 +69,33 @@ public class Hero : MonoBehaviour
         transform.position = pos;
         bounds.center = transform.position;
         
-        // keep the ship constrained to the screen bounds
-        Vector3 off = Utils.ScreenBoundsCheck(bounds, BoundsTest.onScreen);
+        Vector3 off = Utils.ScreenBoundsCheck(bounds, BoundsTest.onScreen);    // keep the ship constrained to the screen bounds
         if (off != Vector3.zero)
         {
             pos -= off;
             transform.position = pos;
         }
         
-        // rotate the ship to make it feel more dynamic
-        transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
-        
-        // A button is red firing, S is blue firing, D is green firing, F is purple firing
-        
-        /*
-        if (Input.GetKey(KeyCode.LeftShift) == true && fireDelegate != null)
-        {
-            print("shift");
-            fireDelegate();
-        } 
-        else if (Input.GetKey(KeyCode.Z) == true && fireDelegate != null)
-        {
-            print("Z");
-            fireDelegate();
-        }
-        else if (Input.GetKey(KeyCode.X) == true && fireDelegate != null)
-        {
-            print("X");
-            fireDelegate();
-        }
-        */
+        transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);    // rotate the ship to make it feel more dynamic
 
+        
+        
+        /* FIRING CONTROL */
+        
         if (Input.GetAxis("Jump") == 1 && fireDelegate != null)
         {
             fireDelegate();
             
         }
-        
-        
         if (Input.GetKeyDown(KeyCode.LeftShift) == true && fireDelegate != null)
         {
             print("shift");
            // Weapon.type = WeaponType.purpleBlaster;
-            fireDelegate();
+          // GetComponent<Weapon>().SetType(WeaponType.blueBlaster);
+           fireDelegate();
+            
         } 
-        else if (Input.GetKey(KeyCode.Z))
+        else if (Input.GetKey(KeyCode.Z) == true && fireDelegate != null)
         {
             print("Z");
             fireDelegate();
@@ -112,19 +109,16 @@ public class Hero : MonoBehaviour
     }
     
     
-    
     // this variable holds a reference to the last triggering GameObject
     public GameObject lastTriggerGo = null;
 
     private void OnTriggerEnter(Collider other)
     {
-        // find the tag of other.gameObject or its parent GameObjects
-        GameObject go = Utils.FindTaggedParent(other.gameObject);
-        // if there is a parent with a tag
-        if (go != null)
+        GameObject go = Utils.FindTaggedParent(other.gameObject);    // find the tag of other.gameObject or its parent GameObjects
+        
+        if (go != null)    // if there is a parent with a tag
         {
-            // make sure it's not the same triggering go as last time
-            if (go == lastTriggerGo)
+            if (go == lastTriggerGo)    // make sure it's not the same triggering go as last time
             {
                 return;
             }
@@ -146,6 +140,28 @@ public class Hero : MonoBehaviour
         else
         {
             print("Triggered: " + other.gameObject.name);
+        }
+    }
+
+
+    Weapon GetEmptyWeaponSlot()
+    {
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            if (weapons[i].type == WeaponType.none)
+            {
+                return (weapons[i]);
+            }
+        }
+
+        return (null);
+    }
+
+    void ClearWeapons()
+    {
+        foreach (Weapon w in weapons)
+        {
+            w.SetType(WeaponType.none);
         }
     }
 

@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Shield : MonoBehaviour
 {
+    [Header("Set in Inspector")]
+    
     public float rotationsPerSecond = 0.1f;
-    public bool ________________;
+    
+    [Header("Set Dynamically")]
+    
     public int levelShown = 0;
 
     private Material mat;
