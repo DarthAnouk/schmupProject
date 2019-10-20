@@ -2,121 +2,117 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using _Scripts;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    [Header("Set in Inspector: Enemy")]
     public float speed = 10f; // the speed in m/s
     public float fireRate = 0.3f; // seconds/shot (unsused)
-    public float health = 5;
+    public float health = 10;
     public int score = 100; // points earned for destroying this
+    public float showDamageDuration = 0.1f;
 
-    public int showDamageForFrames = 2; // # of frames to show damage
 
-    public bool __________;
-
+    [Header("Set Dynamically: Enemy")] 
     public Color[] originalColors;
-    public Material[] materials; // all the Materials of this and its children
-    public int remainingDamageFrames = 0; // damage frames left
-
-    public Bounds bounds; // the bounds of this and its children
-    public Vector3 boundsCenterOffset; // distance of bounds.center from position
+    public Material[] materials;    // all of the materials of this and its children
+    public bool showingDamage = false;
+    public float damageDoneTime;    // time to stop showing damage
+    public bool notifiedOfDestruction = false;
     
-    void Awake()
-    {
-        materials = Utils.GetAllMaterials(gameObject);
-        originalColors = new Color[materials.Length];
-        for (int i = 0; i < materials.Length; i++)
-        {
-            originalColors[i] = materials[i].color;
-        }
-        InvokeRepeating("CheckOffscreen", 0f, 2f);
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        Move();
-        if (remainingDamageFrames > 0)
-        {
-            remainingDamageFrames--;
-            if (remainingDamageFrames == 0)
-            {
-                UnShowDamage();
-            }
-        }
-    }
-
-    public virtual void Move()
-    {
-        Vector3 tempPos = pos;
-        tempPos.y -= speed * Time.deltaTime;
-        pos = tempPos;
-    }
-    
-    //this is a Property: a method that acts like a field
+    // this is a Property: a method that acts like a field
     public Vector3 pos
     {
         get { return (this.transform.position); }
         set { this.transform.position = value; }
     }
 
-    void CheckOffscreen()
+    protected BoundsCheck bndCheck;
+
+
+    
+    
+    private void Awake()
     {
-        // if bouns are still their default value...
-        if (bounds.size == Vector3.zero)
-        {
-            // then set them
-            bounds = Utils.CombineBoundsOfChildren(this.gameObject);
-            // also find the diff between bounds.center & transform.position
-            boundsCenterOffset = bounds.center - transform.position;
-        }
+        bndCheck = GetComponent<BoundsCheck>();
         
-        // every time, update the bounds to the current position
-        bounds.center = transform.position + boundsCenterOffset;
-        //check to see whether the bounds are completely offscreen
-        Vector3 off = Utils.ScreenBoundsCheck(bounds, BoundsTest.offScreen);
-        if (off != Vector3.zero)
+        // get materials and colors for this GameObject and its children
+        materials = Utils.GetAllMaterials(gameObject);
+        originalColors = new Color[materials.Length];
+        for (int i = 0; i < materials.Length; i++)
         {
-            // if this enemy has gone off the bottom edge of the screen
-            if (off.y < 0)
-            {
-                // then destroy it
-                Destroy(this.gameObject);
-            }
+            originalColors[i] = materials[i].color;
         }
     }
 
-    private void OnCollisionEnter(Collision coll)
+
+    private void Update()
     {
-        GameObject other = coll.gameObject;
-        switch (other.tag)
+        Move();
+
+        if (showingDamage && Time.time > damageDoneTime)
+        {
+            UnShowDamage();
+        }
+
+        if (bndCheck != null && bndCheck.offDown)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+
+    
+    public virtual void Move()
+    {
+        Vector3 tempPos = pos;
+
+        tempPos.y -= speed * Time.deltaTime;
+
+        pos = tempPos;
+    }
+
+
+    void OnCollisionEnter(Collision coll)
+    {
+        GameObject otherGO = coll.gameObject;
+
+        switch (otherGO.tag)
         {
             case "ProjectileHero":
-                Projectile p = other.GetComponent<Projectile>();
-                // enemies don't take damage unless they're onscreen
-                // this stops the player from shooting them before they're visible
-                bounds.center = transform.position + boundsCenterOffset;
-                if (bounds.extents == Vector3.zero ||
-                    Utils.ScreenBoundsCheck(bounds, BoundsTest.offScreen) != Vector3.zero)
+                Projectile p = otherGO.GetComponent<Projectile>();
+                // if this enemy is off screen, don't damage it
+                if (!bndCheck.isOnScreen)
                 {
-                    Destroy(other);
+                    Destroy(otherGO);
                     break;
                 }
+                
+                // THIS IS WHERE YOU SHOULD ADD DIFFERENT DAMAGE BASED ON WEAPON USED
+                
                 // hurt this enemy
                 ShowDamage();
-                // get the damage amount from the Projectile.type & Main.W_DEFS
-                health -= Main.W_DEFS[p.type].damageOnHit;
+                // get the damage amount from the Main WEAP_DICT
+                health -= Main.GetWeaponDefinition(p.type).damageOnHit;
                 if (health <= 0)
                 {
-                    // destroy this enemy
                     Destroy(this.gameObject);
                 }
-                Destroy(other);
+                Destroy(otherGO);
+                break;
+            default:
+                print("Enemy hit by non-ProjectileHero" + otherGO.name);
                 break;
         }
     }
 
+
+
+
+    // === Functions for making Enemies flash Red when Damaged === \\
     void ShowDamage()
     {
         foreach (Material m in materials)
@@ -124,7 +120,8 @@ public class Enemy : MonoBehaviour
             m.color = Color.red;
         }
 
-        remainingDamageFrames = showDamageForFrames;
+        showingDamage = true;
+        damageDoneTime = Time.time + showDamageDuration;
     }
 
     void UnShowDamage()
@@ -133,6 +130,7 @@ public class Enemy : MonoBehaviour
         {
             materials[i].color = originalColors[i];
         }
-    }
 
+        showingDamage = false;
+    }
 }

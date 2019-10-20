@@ -16,6 +16,9 @@ public enum WeaponType
     greenBlaster,
     purpleBlaster,
     spread,
+    phaser,
+    missile,
+    laser,
     shield
 }
 
@@ -67,7 +70,6 @@ public class Weapon : MonoBehaviour
         GameObject parentGO = transform.parent.gameObject;
         if (parentGO.tag == "Hero")
         {
-            Hero.S.fireDelegate += Fire;
            
         }
     }
@@ -91,7 +93,7 @@ public class Weapon : MonoBehaviour
             this.gameObject.SetActive(true);
         }
 
-        def = Main.GetWeaponDefinition(_type);
+       // def = Main.GetWeaponDefinition(_type);
         collar.GetComponent<Renderer>().material.color = def.color;
         lastShot = 0;
         
@@ -170,7 +172,7 @@ public class Weapon : MonoBehaviour
         //go.transform.position = collar.transform.position;
         go.transform.parent = PROJECTILE_ANCHOR;
         Projectile p = go.GetComponent<Projectile>();
-        p.type = type;
+       // p.type = type;
         lastShot = Time.time;
         return (p);
     }

@@ -1,91 +1,94 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Scripts;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Random = UnityEngine.Random;
 
 public class Main : MonoBehaviour
 {
     static public Main S;
-    static public Dictionary<WeaponType, WeaponDefinition> W_DEFS;
 
+    [Header("Set in Inspector")]
     public GameObject[] prefabEnemies;
     public float enemySpawnPerSecond = 0.5f; // # Enemies/second
-    public float enemySpawnPadding = 1.5f; // padding for position
+    public float enemyDefaultPadding = 1.5f; // padding for position
     
+    // Weapon Setup
+    static Dictionary<WeaponType, WeaponDefinition> WEAP_DICT;
     public WeaponDefinition[] weaponDefinitions;
-
-    public bool _______;
-
-    public WeaponType[] activeWeaponTypes;
-    public float enemySpawnRate; // delay between Enemy spawns
     
-    //public GameObject text = GameObject.Find("Score");
+    private BoundsCheck bndCheck;
 
     void Awake()
     {
         S = this;
-        // set Utils.camBounds
-        Utils.SetCameraBounds(this.GetComponent<Camera>());
-        enemySpawnRate = 1f / enemySpawnPerSecond;    // 0.5 enemies/second - enemySpawnRate of 2
-        Invoke("SpawnEnemy", enemySpawnRate);
+
+        bndCheck = GetComponent<BoundsCheck>();
         
-        W_DEFS = new Dictionary<WeaponType, WeaponDefinition>();    // a generic Dictionary with WeaponType as the key
+        Invoke("SpawnEnemy", 1f/enemySpawnPerSecond);
+        
+        // a generic Dictionary with weapontype as the key
+        WEAP_DICT = new Dictionary<WeaponType, WeaponDefinition>();
         foreach (WeaponDefinition def in weaponDefinitions)
         {
-            W_DEFS[def.type] = def;
+            WEAP_DICT[def.type] = def;
         }
     }
-
-    static public WeaponDefinition GetWeaponDefinition(WeaponType wt)
-    {
-        // check to make sure that the key exists in the Dictionary
-        // attempting to retrieve a key that didn't exist would throw an error
-        if (W_DEFS.ContainsKey(wt))
-        {
-            return (W_DEFS[wt]);
-        }
-        // this will return a definition for WeaponType.none which means it has failed to find the WeaponDefinition
-        return ( new WeaponDefinition() );
-    }
-
-    private void Start()
-    {
-        // make a list of all of the active weapons
-        activeWeaponTypes = new WeaponType[weaponDefinitions.Length];
-        for (int i = 0; i < weaponDefinitions.Length; i++)
-        {
-            activeWeaponTypes[i] = weaponDefinitions[i].type;
-        }
-    }
+    
 
     public void SpawnEnemy()
     {
         // pick a random enemy prefab to instatiate
         int ndx = Random.Range(0, prefabEnemies.Length);
-        GameObject go = Instantiate(prefabEnemies[ndx]) as GameObject;
-       
+        GameObject go = Instantiate<GameObject>(prefabEnemies[ndx]);
+
         // position the enemy above the screen with a random x position
+        float enemyPadding = enemyDefaultPadding;
+        if (go.GetComponent<BoundsCheck>() != null)
+        {
+            enemyPadding = Mathf.Abs(go.GetComponent<BoundsCheck>().radius);
+        }
+        
+        // set the initial position for the spawned Enemy
         Vector3 pos = Vector3.zero;
-        float xMin = Utils.camBounds.min.x + enemySpawnPadding;
-        float xMax = Utils.camBounds.max.x + enemySpawnPadding;
+        float xMin = -bndCheck.camWidth + enemyPadding;
+        float xMax = bndCheck.camWidth - enemyPadding;
         pos.x = Random.Range(xMin, xMax);
-        pos.y = Utils.camBounds.max.y + enemySpawnPadding;
+        pos.y = bndCheck.camHeight + enemyPadding;
         go.transform.position = pos;
         
-        //call spawnenemy() again in a couple of seconds
-        Invoke("SpawnEnemy", enemySpawnRate);
+        //call spawnenemy() again
+        Invoke("SpawnEnemy", 1f/enemySpawnPerSecond);
     }
 
+    
+    
     public void DelayedRestart(float delay)
     {
         //invoke the Restart() method in delay seconds
         Invoke("Restart", delay);
     }
 
+    
+    
     public void Restart()
     {
         // reload _Scene_0 to restart the game
-        Application.LoadLevel("SampleScene");
+        SceneManager.LoadScene(("SampleScene"));
+    }
+
+
+
+    static public WeaponDefinition GetWeaponDefinition(WeaponType wt)
+    {
+        // check to make sure the key exists in the dictionary
+        if (WEAP_DICT.ContainsKey(wt))
+        {
+            return (WEAP_DICT[wt]);
+        }
+
+        return (new WeaponDefinition());    // this returns a new WeaponDefinition with a type of WeaponType
     }
 }

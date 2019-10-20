@@ -8,10 +8,14 @@ using Random = UnityEngine.Random;
 public class Enemy_3 : Enemy
 {
     // Enemy_3 will move following a Bezier curve, which is a linear interpolation between more than two points
+    
+    [Header("Set in Inspector: Enemy_3")]
+    public float lifeTime = 5;
+    
+    
+    [Header("Set Dynamically: Enemy_3")]
     public Vector3[] points;
     public float birthTime;
-    public float lifeTime = 10;
-    
     
     // Start is called before the first frame update
     void Start()
@@ -22,21 +26,23 @@ public class Enemy_3 : Enemy
         points[0] = pos;
 
         // set xMin and xMax the same way that Main.SpawnEnemy() does
-        float xMin = Utils.camBounds.min.x + Main.S.enemySpawnPadding;
-        float xMax = Utils.camBounds.max.x - Main.S.enemySpawnPadding;
+        float xMin = -bndCheck.camWidth + bndCheck.radius;
+        float xMax = bndCheck.camWidth - bndCheck.radius;
         
         Vector3 v;
         
         // pick a random middle position in the bottom half of the screen
         v = Vector3.zero;
         v.x = Random.Range(xMin, xMax);
-        v.y = Random.Range(Utils.camBounds.min.y, 0);
+        v.y = -bndCheck.camHeight * Random.Range(2.75f, 2);
+        
         points[1] = v;
         
         // pick random final position above the top of the screen
         v = Vector3.zero;
         v.y = pos.y;
         v.x = Random.Range(xMin, xMax);
+        
         points[2] = v;
         
         // see the birthTime to the current time
@@ -60,6 +66,6 @@ public class Enemy_3 : Enemy
         u = u - 0.2f * Mathf.Sin(u * Mathf.PI * 2);
         p01 = (1 - u) * points[0] + u * points[1];
         p12 = (1 - u) * points[1] + u * points[2];
-        pos = (1 - u) * p01 + u * u * p12;
+        pos = (1 - u) * p01 + u * p12;
     }
 }

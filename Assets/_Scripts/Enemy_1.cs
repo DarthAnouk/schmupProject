@@ -6,18 +6,19 @@ public class Enemy_1 : Enemy
 {
     // Enemy_1.cs extends Enemy.cs
     
+    [Header("Set in Inspector: Enemy_1")]
     // # seconds for a full sine wave
     public float waveFrequency = 2;
     // sine wave width in meters
     public float waveWidth = 4;
     public float waveRotY = 45;
 
-    private float x0 = -12345;
+    private float x0;    // the initial x value of pos
     private float birthTime;
 
     void Start()
     {
-        x0 = pos.x;
+        x0 = pos.x;    // set x0 to the intial x position of Enemy_1
 
         birthTime = Time.time;
     }
@@ -35,7 +36,9 @@ public class Enemy_1 : Enemy
         // rotate a bit about y
         Vector3 rot = new Vector3(0, sin*waveRotY, 0);
         this.transform.rotation = Quaternion.Euler(rot);
+        
         base.Move();  // base.Move() still hadles the movement down in y
-
+        
+        //print(bndCheck.isOnScreen);
     }
 }
