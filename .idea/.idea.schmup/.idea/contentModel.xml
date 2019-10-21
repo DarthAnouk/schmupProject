@@ -20,6 +20,7 @@
           <e p="Main.cs" t="Include" />
           <e p="Projectile.cs" t="Include" />
           <e p="Projectile_1.cs" t="Include" />
+          <e p="Score.cs" t="Include" />
           <e p="Shield.cs" t="Include" />
           <e p="Utils.cs" t="Include" />
           <e p="Weapon.cs" t="Include" />

@@ -286,7 +286,12 @@ MonoBehaviour:
 
     arrows to move
 
-    shift, z, x, c to fire'
+    space, z, x, c to fire
+
+
+    w, a, s, d to move
+
+    space, j, k, l to fire'
 --- !u!222 &329260954
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -307,7 +312,7 @@ GameObject:
   - component: {fileID: 347501011}
   - component: {fileID: 347501010}
   m_Layer: 5
-  m_Name: Score
+  m_Name: ScoreText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,10 +365,10 @@ MonoBehaviour:
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
+    m_HorizontalOverflow: 1
+    m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: 'Score: 0'
 --- !u!222 &347501011
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -497,6 +502,7 @@ GameObject:
   - component: {fileID: 576641847}
   - component: {fileID: 576641846}
   - component: {fileID: 576641845}
+  - component: {fileID: 576641849}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -585,6 +591,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &576641849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 576641844}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8ceedd5a1f5f4615ae8cc647d9c2138, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreText: {fileID: 0}
 --- !u!1 &620695450
 GameObject:
   m_ObjectHideFlags: 0
@@ -866,7 +885,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabEnemies:
+  - {fileID: 4810349746728997072, guid: 19b208de0bf93463799b2c266df7ffe0, type: 3}
   - {fileID: 625069204378976781, guid: fbd15ce1675334edbb9f23a623490956, type: 3}
+  - {fileID: 8147647759291417684, guid: afd2be3e258de41c08e46ef25d7f285c, type: 3}
+  - {fileID: 7821337706802001206, guid: 11501ce9aed2e4903a688aafba3f946e, type: 3}
   enemySpawnPerSecond: 0.5
   enemyDefaultPadding: 1.5
   weaponDefinitions:

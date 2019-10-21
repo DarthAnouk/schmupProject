@@ -92,6 +92,8 @@ public class Enemy : MonoBehaviour
                     break;
                 }
                 
+                
+                
                 //=== COLOR CODED ENEMY DAMAGE ===\\
                 
                 // Enemy_0 and Blaster
@@ -121,14 +123,43 @@ public class Enemy : MonoBehaviour
                     if (health <= 0)
                     {
                         Destroy(this.gameObject);
+                        Score.S.UpdateScore(this.score);
                     }
                     Destroy(otherGO);
                     break;
                 }
                 
                 // Enemy_2 and Purple Blaster
+                if (this.tag == "Enemy_2" && p.type == WeaponType.purpleBlaster)
+                {
+                    // hurt this enemy
+                    ShowDamage();
+                    // get the damage amount from the Main WEAP_DICT
+                    health -= Main.GetWeaponDefinition(p.type).damageOnHit;
+                    if (health <= 0)
+                    {
+                        Destroy(this.gameObject);
+                        Score.S.UpdateScore(this.score);
+                    }
+                    Destroy(otherGO);
+                    break;
+                }
                 
                 // Enemy_3 and Green Blaster
+                if (this.tag == "Enemy_3" && p.type == WeaponType.greenBlaster)
+                {
+                    // hurt this enemy
+                    ShowDamage();
+                    // get the damage amount from the Main WEAP_DICT
+                    health -= Main.GetWeaponDefinition(p.type).damageOnHit;
+                    if (health <= 0)
+                    {
+                        Destroy(this.gameObject);
+                        Score.S.UpdateScore(this.score);
+                    }
+                    Destroy(otherGO);
+                    break;
+                }
                 
                 else
                 {

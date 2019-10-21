@@ -84,7 +84,7 @@ public class Hero : MonoBehaviour
             rigidB.velocity = Vector3.up * projectileSpeed;
 
             Projectile proj = projGO.GetComponent<Projectile>();
-            proj.type = WeaponType.redBlaster;
+            proj.type = WeaponType.purpleBlaster;
             float tSpeed = Main.GetWeaponDefinition(proj.type).velocity;
             rigidB.velocity = Vector3.up * tSpeed;
         }
