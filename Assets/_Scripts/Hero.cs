@@ -57,7 +57,11 @@ public class Hero : MonoBehaviour
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);    // rotate the ship to make it feel more dynamic
         
         
-        // allow the ship to fire
+        
+        
+        //====== FIRING COMMANDS ======\\
+        
+        // Regular Blaster
         if (Input.GetKeyDown(KeyCode.Space))
         {
             GameObject projGO = Instantiate<GameObject>(projectilePrefab);
@@ -71,7 +75,8 @@ public class Hero : MonoBehaviour
             rigidB.velocity = Vector3.up * tSpeed;
         }
 
-        if (Input.GetKeyDown(KeyCode.Z))
+        // Red Blaster
+        if (Input.GetKeyDown(KeyCode.Z) || Input.GetKeyDown(KeyCode.J))
         {
             GameObject projGO = Instantiate<GameObject>(projectilePrefab);
             projGO.transform.position = transform.position;
@@ -80,6 +85,34 @@ public class Hero : MonoBehaviour
 
             Projectile proj = projGO.GetComponent<Projectile>();
             proj.type = WeaponType.redBlaster;
+            float tSpeed = Main.GetWeaponDefinition(proj.type).velocity;
+            rigidB.velocity = Vector3.up * tSpeed;
+        }
+        
+        // Blue Blaster
+        if (Input.GetKeyDown(KeyCode.X) || Input.GetKeyDown(KeyCode.K))
+        {
+            GameObject projGO = Instantiate<GameObject>(projectilePrefab);
+            projGO.transform.position = transform.position;
+            Rigidbody rigidB = projGO.GetComponent<Rigidbody>();
+            rigidB.velocity = Vector3.up * projectileSpeed;
+
+            Projectile proj = projGO.GetComponent<Projectile>();
+            proj.type = WeaponType.blueBlaster;
+            float tSpeed = Main.GetWeaponDefinition(proj.type).velocity;
+            rigidB.velocity = Vector3.up * tSpeed;
+        }
+        
+        // Green Blaster
+        if (Input.GetKeyDown(KeyCode.C) || Input.GetKeyDown(KeyCode.L))
+        {
+            GameObject projGO = Instantiate<GameObject>(projectilePrefab);
+            projGO.transform.position = transform.position;
+            Rigidbody rigidB = projGO.GetComponent<Rigidbody>();
+            rigidB.velocity = Vector3.up * projectileSpeed;
+
+            Projectile proj = projGO.GetComponent<Projectile>();
+            proj.type = WeaponType.greenBlaster;
             float tSpeed = Main.GetWeaponDefinition(proj.type).velocity;
             rigidB.velocity = Vector3.up * tSpeed;
         }
@@ -115,7 +148,7 @@ public class Hero : MonoBehaviour
         }
         lastTriggerGo = go;
 
-        if (go.tag == "Enemy") // if the shield was triggered by an enemy
+        if (go.layer == 9) // if the shield was triggered by an enemy, Enemy Layer is 9
         {
             shieldLevel--;     // decrease the level of the shield by 1
             Destroy(go);       // and destroy the enemy

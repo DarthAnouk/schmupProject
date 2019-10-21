@@ -22,7 +22,7 @@ public class Enemy : MonoBehaviour
     public float damageDoneTime;    // time to stop showing damage
     public bool notifiedOfDestruction = false;
     
-
+    
     // this is a Property: a method that acts like a field
     public Vector3 pos
     {
@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour
         set { this.transform.position = value; }
     }
 
+    
     protected BoundsCheck bndCheck;
 
 
@@ -91,7 +92,52 @@ public class Enemy : MonoBehaviour
                     break;
                 }
                 
-                // THIS IS WHERE YOU SHOULD ADD DIFFERENT DAMAGE BASED ON WEAPON USED
+                //=== COLOR CODED ENEMY DAMAGE ===\\
+                
+                // Enemy_0 and Blaster
+                if (this.tag == "Enemy_0" && p.type == WeaponType.blaster)
+                {
+                    print("Enemy_0 and red blaster");
+                    // hurt this enemy
+                    ShowDamage();
+                    // get the damage amount from the Main WEAP_DICT
+                    health -= Main.GetWeaponDefinition(p.type).damageOnHit;
+                    if (health <= 0)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    Destroy(otherGO);
+                    break;
+                }
+
+                // Enemy_1 and Blue Blaster
+                if (this.tag == "Enemy_1" && p.type == WeaponType.blueBlaster)
+                {
+                    print("Enemy_2 and blue blaster");
+                    // hurt this enemy
+                    ShowDamage();
+                    // get the damage amount from the Main WEAP_DICT
+                    health -= Main.GetWeaponDefinition(p.type).damageOnHit;
+                    if (health <= 0)
+                    {
+                        Destroy(this.gameObject);
+                    }
+                    Destroy(otherGO);
+                    break;
+                }
+                
+                // Enemy_2 and Purple Blaster
+                
+                // Enemy_3 and Green Blaster
+                
+                else
+                {
+                    Destroy(otherGO);
+                    break;
+                }
+                //Destroy(otherGO);
+                //break;
+            
                 
                 // hurt this enemy
                 ShowDamage();
@@ -103,6 +149,7 @@ public class Enemy : MonoBehaviour
                 }
                 Destroy(otherGO);
                 break;
+                
             default:
                 print("Enemy hit by non-ProjectileHero" + otherGO.name);
                 break;

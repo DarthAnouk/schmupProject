@@ -37,8 +37,6 @@ public class Enemy_1 : Enemy
         Vector3 rot = new Vector3(0, sin*waveRotY, 0);
         this.transform.rotation = Quaternion.Euler(rot);
         
-        base.Move();  // base.Move() still hadles the movement down in y
-        
-        //print(bndCheck.isOnScreen);
+        base.Move();  // base.Move() still handles the movement down in y
     }
 }
