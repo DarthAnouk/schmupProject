@@ -1,4 +1,4 @@
-##Process Documentation
+## Process Documentation
 The creation of my schmup was difficult. I realized over halfway through the project that the reason so much of my project wasn't working was because I was using the old version of the book instead of the new version. After switching to the new version of our textbook, the work went a lot faster and I was able to make the mechanical changes I wanted to make. In the old book, the author uses a delegate for firing missiles without explaining it fully. In the new book he explains the code for firing and then adds a delegate to control it, so I was able to figure out the code I wanted without the delegate. Below, you can see the actual in-progress posts I made while working on the project.
 
 ### 2019.09.24
